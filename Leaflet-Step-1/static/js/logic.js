@@ -16,18 +16,27 @@ var myMap = L.map("mapid", {
   
 var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
+function markerSize(mag) {
+  return mag * 10000;
+}
+
+
 
 d3.json(url).then(function(response) {
 
   console.log(response.features[1].geometry);
 
-  for (var i = 0; i < response.features.length; i++) {
-    var location = response.features[i].geometry;
+  console.log(response.features[1].properties.mag);
 
-    console.log(location);
+  for (var i = 0; i < response.features.length; i++) {
+    var location = response.features[i];
 
     if (location) {
-      L.marker([location.coordinates[1], location.coordinates[0]]).addTo(myMap);
+      L.circle([location.geometry.coordinates[1], location.geometry.coordinates[0]],{
+        color:"yellow",
+        fillcolor: "black",
+        fillopacity: 1.00,
+        radius: markerSize(location.properties.mag)}).addTo(myMap);
     }
   }
 
